@@ -3,12 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <algorithm>
 #include <time.h>
 using namespace std;
 
 string ploca = "";
-int zeleniPijuni[4]={-1,-1,-1,-1};
-int brojPiunaZeleni=0;
+
 
 struct celija{
     int index;
@@ -33,44 +33,130 @@ int kocka()
 {
     int n = rand() % 6 + 1;
 
-    cout << "Tvoj broj je: "<<n;
+    cout << "Tvoj broj je: "<<n<<endl;
     return n;
 
 }
 
-
-void igra()
-{
-    string zeleni, zuti, plavi, crveni;
-
-    while(1)
-    {
-        cout<<"ZELENI NA POTEZU: "<<endl;
-        int k = kocka();
-        while(k==6)
-        {
-            cout<<"Pokani piuna(1) ili Izadi van(2): "<<endl;
-            int odabir;
-            cin>>odabir;
-            if(odabir==1)
-            {
-                cout<<"Kojeg piuna zelis pomaknut: 1, 2, 3, 4: "<<endl;
-                int odabirPiun;
-                cin>>odabirPiun;
-                //micemo piun sa polja
-                ploca[zeleniPijuni[odabirPiun-1]] = 'O';
-                //stavljamo ga na novo mjesto
-                ploca[zeleniPijuni[odabirPiun-1]+k]='z';
-
-            }
-            else if(odabir==2)
-            {
-
-                brojPiunaZeleni++;
-
+bool findElement(int index, int &row, int &col) {
+    for (int i = 0; i < 11; ++i) {
+        for (int j = 0; j < 11; ++j) {
+            if (ploca2[i][j].index == index) {
+                row = i;
+                col = j;
+                return true;
             }
         }
+    }
+    return false;
+}
 
+
+void ispisPloce2()
+{
+    for(int i = 0; i < 11; i++)
+    {
+        for(int j = 0; j < 11; j++)
+        {
+            cout << ploca2[i][j].znak;
+        }
+        cout << endl;
+    }
+}
+
+
+
+int pijuni[4][4] = {
+    {-1,-2,-3,-4},
+    {-5,-6,-7,-8},
+    {-9,-10,-11,-12},
+    {-13,-14,-15,-16}
+};
+
+char znakovi[4] = {'Z', 'C', 'P', 'N'};
+int brojPijuna[4] = {0,0,0,0};
+string nazivi[4] = {"Zeleni", "Crveni", "Plavi", "Narancasti"};
+void igra()
+{
+    int igrac=0;
+    bool greska = false;
+    while(1)
+    {
+        cout << nazivi[igrac % 4] << " klikni 0 da bacite kocku: " << endl;
+        int baciKocku;
+        cin>>baciKocku;
+        if(true)
+        {
+            int pomak;
+            int pijun;
+            int razlika=0;
+            pomak = kocka();
+            if(baciKocku != 0)
+                pomak = baciKocku;
+            while(1)
+            {
+                if(brojPijuna[igrac] == 0 && pomak !=6){
+                    system("cls");
+                    ispisPloce2();
+                    break;
+                }
+                cout << "Kojeg pijuna zelite pomaknuti: " << endl;
+                cin >> pijun;
+                if(pijuni[igrac % 4][pijun] < 0 && pomak != 6)
+                {
+
+                    cout << "Ilegalan potez " << endl;
+                }
+                else
+                {
+                    if(pijuni[igrac % 4][pijun] < 0){
+                        razlika = 11 * (igrac % 4) + abs(pijuni[igrac][pijun]);
+                        brojPijuna[igrac % 4]++;
+                    }
+                    int i,j;
+                    findElement(pijuni[igrac % 4][pijun], i, j);
+                    ploca2[i][j].znak = 'O';
+                    pijuni[igrac % 4][pijun] += pomak + razlika;
+                    if(pijuni[igrac][pijun] > 40)
+                        pijuni[igrac][pijun]-=40;
+                    findElement(pijuni[igrac % 4][pijun], i, j);
+                    if(ploca2[i][j].znak == znakovi[igrac])
+                    {
+                        cout << "Ilegalan potez" << endl;
+                        continue;
+                    }
+                    else if(ploca2[i][j].znak != 'O'){
+                        int kucaI, kucaJ;
+                        cout << "jedenje \n";
+                        int znakZaPojest = (find(znakovi, znakovi + 4, ploca2[i][j].znak) - znakovi);
+                        for(int k = -1; k > -5; k--)
+                        {
+                            findElement(-4 * znakZaPojest + k, kucaI, kucaJ);
+                            if(ploca2[kucaI][kucaJ].znak == 'O'){
+                                cout << kucaI << " " << kucaJ << "\n";
+                                break;
+                            }
+
+                        }
+                        int idx = find(pijuni[znakZaPojest], pijuni[znakZaPojest] + 4, ploca2[i][j].index) - pijuni[znakZaPojest];
+                        pijuni[znakZaPojest][idx] = ploca2[kucaI][kucaJ].index;
+                        brojPijuna[znakZaPojest]--;
+                        ploca2[kucaI][kucaJ].znak = ploca2[i][j].znak;
+
+                    }
+                    ploca2[i][j].znak = znakovi[igrac];
+                    if(pomak == 6){
+                        igrac--;
+                    }
+                    system("cls");
+                    ispisPloce2();
+                    razlika = 0;
+                    break;
+                }
+            }
+        }
+        igrac++;
+        igrac = igrac % 4;
     }
 }
 
@@ -106,18 +192,6 @@ void ispisPloce()
     }
 }
 
-void ispisPloce2()
-{
-    for(int i = 0; i < 11; i++)
-    {
-        for(int j = 0; j < 11; j++)
-        {
-            cout << ploca2[i][j].znak;
-        }
-        cout << endl;
-    }
-}
-
 int main()
 {
     srand (time(NULL));
@@ -145,11 +219,13 @@ int main()
         if (izbor == 1)
         {
             ispisPloce2();
-         }
+            igra();
+        }
 
         else if (izbor == 2)
         {
             kocka();
+            cout << " " << (find(znakovi, znakovi + 4, 'N') - znakovi);
         }
 
         else if (izbor == 3)
@@ -162,6 +238,5 @@ int main()
             cout << " -- izlaz iz programa -- ";
 
         }
-        while(1){}
     return 0;
 }
