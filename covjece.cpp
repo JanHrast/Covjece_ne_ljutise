@@ -76,10 +76,10 @@ int pijuni[4][4] = {
 char znakovi[4] = {'Z', 'C', 'P', 'N'};
 int brojPijuna[4] = {0,0,0,0};
 string nazivi[4] = {"Zeleni", "Crveni", "Plavi", "Narancasti"};
+
 void igra()
 {
-    int igrac=0;
-    bool greska = false;
+    int igrac=0; //Varijabla koja odrađuje tko je na potezu
     while(1)
     {
         cout << nazivi[igrac % 4] << " klikni 0 da bacite kocku: " << endl;
@@ -87,76 +87,80 @@ void igra()
         cin>>baciKocku;
         if(true)
         {
-            int pomak;
-            int pijun;
-            int razlika=0;
+            int pomak; //Za kolko se pijun treba pomaknut
+            int pijun; //Indeks pijuna koji se mice
+            int razlika = 0; //Gdje piuni izlaze
             pomak = kocka();
-            if(baciKocku != 0)
+            if(baciKocku != 0) //varanje
                 pomak = baciKocku;
-            while(1)
+            while(1)  //potez, bacanje kocke, ako nije 6 ide dalje(na pocetku)
             {
-                if(brojPijuna[igrac] == 0 && pomak !=6){
+                if(brojPijuna[igrac] == 0 && pomak !=6){   //brojPiuna[igraca] je kolko piuna ima
                     system("cls");
                     ispisPloce2();
                     break;
                 }
+
                 cout << "Kojeg pijuna zelite pomaknuti: " << endl;
                 cin >> pijun;
-                if(pijuni[igrac % 4][pijun] < 0 && pomak != 6)
-                {
 
+                if(pijuni[igrac][pijun] < 0 && pomak != 6)  // polje sa pozicijama pijuna(pijuni[igrac][pijun]), iligalni potez
+                {
                     cout << "Ilegalan potez " << endl;
+                    continue;
                 }
-                else
+
+                if(pijuni[igrac % 4][pijun] < 0) // gleda dal je izaso iz kucice,
                 {
-                    if(pijuni[igrac % 4][pijun] < 0){
-                        razlika = 11 * (igrac % 4) + abs(pijuni[igrac][pijun]);
-                        brojPijuna[igrac % 4]++;
-                    }
-                    int i,j;
-                    findElement(pijuni[igrac % 4][pijun], i, j);
-                    ploca2[i][j].znak = 'O';
-                    pijuni[igrac % 4][pijun] += pomak + razlika;
-                    if(pijuni[igrac][pijun] > 40)
-                        pijuni[igrac][pijun]-=40;
-                    findElement(pijuni[igrac % 4][pijun], i, j);
-                    if(ploca2[i][j].znak == znakovi[igrac])
-                    {
-                        cout << "Ilegalan potez" << endl;
-                        continue;
-                    }
-                    else if(ploca2[i][j].znak != 'O'){
-                        int kucaI, kucaJ;
-                        cout << "jedenje \n";
-                        int znakZaPojest = (find(znakovi, znakovi + 4, ploca2[i][j].znak) - znakovi);
-                        for(int k = -1; k > -5; k--)
-                        {
-                            findElement(-4 * znakZaPojest + k, kucaI, kucaJ);
-                            if(ploca2[kucaI][kucaJ].znak == 'O'){
-                                cout << kucaI << " " << kucaJ << "\n";
-                                break;
-                            }
-
-                        }
-                        int idx = find(pijuni[znakZaPojest], pijuni[znakZaPojest] + 4, ploca2[i][j].index) - pijuni[znakZaPojest];
-                        pijuni[znakZaPojest][idx] = ploca2[kucaI][kucaJ].index;
-                        brojPijuna[znakZaPojest]--;
-                        ploca2[kucaI][kucaJ].znak = ploca2[i][j].znak;
-
-                    }
-                    ploca2[i][j].znak = znakovi[igrac];
-                    if(pomak == 6){
-                        igrac--;
-                    }
-                    system("cls");
-                    ispisPloce2();
-                    razlika = 0;
-                    break;
+                    razlika = 11 * igrac + abs(pijuni[igrac][pijun]);
+                    brojPijuna[igrac]++;
                 }
+
+                int i,j;
+                findElement(pijuni[igrac % 4][pijun], i, j);
+                ploca2[i][j].znak = 'O'; //na staru poziciju stavlja prazno polje (O)
+                pijuni[igrac % 4][pijun] += pomak + razlika; //racuna novu poziciju
+                if(pijuni[igrac][pijun] > 40) //gledamo dal izlazi iz polja
+                    pijuni[igrac][pijun]-=40;
+
+                findElement(pijuni[igrac % 4][pijun], i, j);
+                if(ploca2[i][j].znak == znakovi[igrac]) //ako samog sebe probas pojest
+                {
+                    cout << "Ilegalan potez" << endl;
+                    continue;
+                }
+
+                else if(ploca2[i][j].znak != 'O'){ //cijeli els if je jedenje
+                    int kucaI, kucaJ; //kordinate kucice
+                    cout << "jedenje \n";
+                    int znakZaPojest = (find(znakovi, znakovi + 4, ploca2[i][j].znak) - znakovi); //kogg si pojeo
+                    for(int k = -1; k > -5; k--) //trazi prvo slobodno mjesto u kucici
+                    {
+                        findElement(-4 * znakZaPojest + k, kucaI, kucaJ);
+                        if(ploca2[kucaI][kucaJ].znak == 'O'){
+                            cout << kucaI << " " << kucaJ << "\n";
+                            break;
+                        }
+                    }
+
+                    int idx = find(pijuni[znakZaPojest], pijuni[znakZaPojest] + 4, ploca2[i][j].index) - pijuni[znakZaPojest]; //trazi u polju gdje su pijuni u kojem je polju bio pijun
+                    pijuni[znakZaPojest][idx] = ploca2[kucaI][kucaJ].index; //stavlja ga u polje gdje su ostali pijun iste boje
+                    brojPijuna[znakZaPojest]--;
+                    ploca2[kucaI][kucaJ].znak = ploca2[i][j].znak; //zamjeni krug i znak
+
+                }
+                ploca2[i][j].znak = znakovi[igrac]; //gleda di treba ic pijun i stavlja ga na to mjesto
+                if(pomak == 6){ //ponovno bacanje
+                    igrac--;
+                }
+                system("cls");
+                ispisPloce2();
+                razlika = 0;
+                break;
             }
         }
         igrac++;
-        igrac = igrac % 4;
+        igrac = igrac % 4; //limitira na 4 igraca
     }
 }
 
