@@ -37,7 +37,7 @@ int kocka()
     return n;
 }
 
-bool findElement(int index, int &row, int &col)
+bool findElement(int index, int &row, int &col) //trazi broj u dva d polju od 1 do 40
 {
     for (int i = 0; i < 11; ++i)
     {
@@ -77,23 +77,23 @@ int brojPijuna[4] = {0, 0, 0, 0};
 string nazivi[4] = {"Zeleni", "Crveni", "Plavi", "Narancasti"};
 int igrac = 0;
 
-void saveGame()
+void saveGame() //binarna datoteka
 {
     fstream datoteka;
     datoteka.open("save.bin", ios::trunc);
     datoteka.close();
     datoteka.open("save.bin", ios::out | ios::binary);
-    datoteka.write((char *)ploca2, sizeof(ploca2));
+    datoteka.write((char *)ploca2, sizeof(ploca2)); // od 1 elementa pise kak je izgledala ploca
     datoteka.write((char *)pijuni, sizeof(pijuni));
     datoteka.write((char *)brojPijuna, sizeof(brojPijuna));
-    datoteka.write((char *)&igrac, sizeof(igrac));
+    datoteka.write((char *)&igrac, sizeof(igrac));// sve do tud
     datoteka.close();
     fstream datoteka2;
     // name.txt
     datoteka2.open("name.txt", ios::out);
     for (int i = 0; i < 4; i++)
     {
-        datoteka2 << nazivi[i] << endl;
+        datoteka2 << nazivi[i] << endl; // nema cout jer ne pise tekst u konzolu nego u file
     }
     datoteka2.close();
 }
@@ -182,7 +182,7 @@ void igra()
 
                 ploca2[i][j].znak = znakovi[igrac]; // gleda di treba ic pijun i stavlja ga na to mjesto
 
-                if (pijuni[igrac][pijun] >= (11 * igrac + 1) && ((pijuni[igrac][pijun] - pomak) < (11 * igrac) || zeleniVani) && prviPotez == false)
+                if (pijuni[igrac][pijun] >= (11 * igrac + 1) && ((pijuni[igrac][pijun] - pomak) < (11 * igrac) || zeleniVani) && prviPotez == false) // mice piuna kad prode cijelo polje
                 {
                     ploca2[i][j].znak = 'O';
                     pijuni[igrac][pijun] = -100;
@@ -211,7 +211,7 @@ void loadGame()
 {
     fstream datoteka;
     datoteka.open("save.bin", ios::in | ios::binary);
-    datoteka.read((char *)ploca2, sizeof(ploca2));
+    datoteka.read((char *)ploca2, sizeof(ploca2)); //kopira iz file u memoriju, onaj prvi je obrnut save game
     datoteka.read((char *)pijuni, sizeof(pijuni));
     datoteka.read((char *)brojPijuna, sizeof(brojPijuna));
     datoteka.read((char *)&igrac, sizeof(igrac));
@@ -221,29 +221,11 @@ void loadGame()
     datoteka2.open("name.txt", ios::in);
     for (int i = 0; i < 4; i++)
     {
-        datoteka2 >> nazivi[i];
+        datoteka2 >> nazivi[i]; //isto kao i kod save game
     }
     datoteka2.close();
 
     ispisPloce2();
-    /*cout << endl;
-    for (int i = 0; i < 4; i++)
-    {
-        cout << nazivi[i] << endl;
-    }
-    for (int i = 0; i < 4; i++)
-    {
-        cout << brojPijuna[i] << endl;
-    }
-    for (int i = 0; i < 4; i++)
-    {
-        for (int j = 0; j < 4; j++)
-        {
-            cout << pijuni[i][j] << " ";
-        }
-        cout << endl;
-    }
-    cout << nazivi[igrac] << " je na potezu" << endl; */
     igra();
 }
 
