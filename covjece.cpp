@@ -4,44 +4,47 @@
 #include <string.h>
 #include <stdlib.h>
 #include <algorithm>
+#include <fstream>
 #include <time.h>
 using namespace std;
 
 string ploca = "";
 
-
-struct celija{
+struct celija
+{
     int index;
     char znak;
 };
 
-   celija ploca2[11][11] = {
-        {{-1, 'Z'}, {-2, 'Z'}, {-1000, ' '}, {-1000, ' '}, {33, 'O'}, {32, 'O'}, {31, 'O'}, {-1000, ' '}, {-1000, ' '}, {-5, 'C'}, {-6, 'C'}},
-        {{-3, 'Z'}, {-4, 'Z'}, {-1000, ' '}, {-1000, ' '}, {34, 'O'}, {-1000, ' '}, {30, 'O'}, {-1000, ' '}, {-1000, ' '}, {-7, 'C'}, {-8, 'C'}},
-        {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {34, ' '}, {35, 'O'}, {-1000, ' '}, {29, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
-        {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {35, ' '}, {36, 'O'}, {-1000, ' '}, {28, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
-        {{1, 'O'}, {40, 'O'}, {39, 'O'}, {38, 'O'}, {37, 'O'}, {-1000, ' '}, {27, 'O'}, {26, 'O'}, {25, 'O'}, {24, 'O'}, {23, 'O'}},
-        {{2, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {22, 'O'}},
-        {{3, 'O'}, {4, 'O'}, {5, 'O'}, {6, 'O'}, {7, 'O'}, {-1000, ' '}, {17, 'O'}, {18, 'O'}, {19, 'O'}, {20, 'O'}, {21, 'O'}},
-        {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {8, 'O'}, {-1000, ' '}, {16, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
-        {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {9, 'O'}, {-1000, ' '}, {15, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
-        {{-9, 'P'}, {-10, 'P'}, {-1000, ' '}, {-1000, ' '}, {10, 'O'}, {-1000, ' '}, {14, 'O'}, {-1000, ' '}, {-1000, ' '}, {-13, 'N'}, {-14, 'N'}},
-        {{-11, 'P'}, {-12, 'P'}, {-1000, ' '}, {-1000, ' '}, {11, 'O'}, {12, 'O'}, {13, 'O'}, {-1000, ' '}, {-1000, ' '}, {-15, 'N'}, {-16, 'N'}}
-    };
+celija ploca2[11][11] = {
+    {{-1, 'Z'}, {-2, 'Z'}, {-1000, ' '}, {-1000, ' '}, {33, 'O'}, {32, 'O'}, {31, 'O'}, {-1000, ' '}, {-1000, ' '}, {-5, 'C'}, {-6, 'C'}},
+    {{-3, 'Z'}, {-4, 'Z'}, {-1000, ' '}, {-1000, ' '}, {34, 'O'}, {-1000, ' '}, {30, 'O'}, {-1000, ' '}, {-1000, ' '}, {-7, 'C'}, {-8, 'C'}},
+    {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {34, ' '}, {35, 'O'}, {-1000, ' '}, {29, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
+    {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {35, ' '}, {36, 'O'}, {-1000, ' '}, {28, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
+    {{1, 'O'}, {40, 'O'}, {39, 'O'}, {38, 'O'}, {37, 'O'}, {-1000, ' '}, {27, 'O'}, {26, 'O'}, {25, 'O'}, {24, 'O'}, {23, 'O'}},
+    {{2, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {22, 'O'}},
+    {{3, 'O'}, {4, 'O'}, {5, 'O'}, {6, 'O'}, {7, 'O'}, {-1000, ' '}, {17, 'O'}, {18, 'O'}, {19, 'O'}, {20, 'O'}, {21, 'O'}},
+    {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {8, 'O'}, {-1000, ' '}, {16, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
+    {{-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {9, 'O'}, {-1000, ' '}, {15, 'O'}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}, {-1000, ' '}},
+    {{-9, 'P'}, {-10, 'P'}, {-1000, ' '}, {-1000, ' '}, {10, 'O'}, {-1000, ' '}, {14, 'O'}, {-1000, ' '}, {-1000, ' '}, {-13, 'N'}, {-14, 'N'}},
+    {{-11, 'P'}, {-12, 'P'}, {-1000, ' '}, {-1000, ' '}, {11, 'O'}, {12, 'O'}, {13, 'O'}, {-1000, ' '}, {-1000, ' '}, {-15, 'N'}, {-16, 'N'}}};
 
 int kocka()
 {
     int n = rand() % 6 + 1;
 
-    cout << "Tvoj broj je: "<<n<<endl;
+    cout << "Tvoj broj je: " << n << endl;
     return n;
-
 }
 
-bool findElement(int index, int &row, int &col) {
-    for (int i = 0; i < 11; ++i) {
-        for (int j = 0; j < 11; ++j) {
-            if (ploca2[i][j].index == index) {
+bool findElement(int index, int &row, int &col)
+{
+    for (int i = 0; i < 11; ++i)
+    {
+        for (int j = 0; j < 11; ++j)
+        {
+            if (ploca2[i][j].index == index)
+            {
                 row = i;
                 col = j;
                 return true;
@@ -51,12 +54,11 @@ bool findElement(int index, int &row, int &col) {
     return false;
 }
 
-
 void ispisPloce2()
 {
-    for(int i = 0; i < 11; i++)
+    for (int i = 0; i < 11; i++)
     {
-        for(int j = 0; j < 11; j++)
+        for (int j = 0; j < 11; j++)
         {
             cout << ploca2[i][j].znak;
         }
@@ -64,40 +66,60 @@ void ispisPloce2()
     }
 }
 
-
-
 int pijuni[4][4] = {
-    {-1,-2,-3,-4},
-    {-5,-6,-7,-8},
-    {-9,-10,-11,-12},
-    {-13,-14,-15,-16}
-};
+    {-1, -2, -3, -4},
+    {-5, -6, -7, -8},
+    {-9, -10, -11, -12},
+    {-13, -14, -15, -16}};
 
 char znakovi[4] = {'Z', 'C', 'P', 'N'};
-int brojPijuna[4] = {0,0,0,0};
+int brojPijuna[4] = {0, 0, 0, 0};
 string nazivi[4] = {"Zeleni", "Crveni", "Plavi", "Narancasti"};
+int igrac = 0;
+
+void saveGame()
+{
+    fstream datoteka;
+    datoteka.open("save.bin", ios::trunc);
+    datoteka.close();
+    datoteka.open("save.bin", ios::out | ios::binary);
+    datoteka.write((char *)ploca2, sizeof(ploca2));
+    datoteka.write((char *)pijuni, sizeof(pijuni));
+    datoteka.write((char *)brojPijuna, sizeof(brojPijuna));
+    datoteka.write((char *)&igrac, sizeof(igrac));
+    datoteka.close();
+    fstream datoteka2;
+    // name.txt
+    datoteka2.open("name.txt", ios::out);
+    for (int i = 0; i < 4; i++)
+    {
+        datoteka2 << nazivi[i] << endl;
+    }
+    datoteka2.close();
+}
 
 void igra()
 {
-    int igrac=0; //Varijabla koja odrađuje tko je na potezu
-    while(1)
+    // int igrac=0; //Varijabla koja odrađuje tko je na potezu
+    while (1)
     {
         cout << nazivi[igrac % 4] << " klikni 0 da bacite kocku: " << endl;
         int baciKocku;
-        cin>>baciKocku;
-        if(true)
+        cin >> baciKocku;
+        if (true)
         {
-            int pomak; //Za kolko se pijun treba pomaknut
-            int pijun; //Indeks pijuna koji se mice
-            int razlika = 0; //Gdje piuni izlaze
+            int pomak;       // Za kolko se pijun treba pomaknut
+            int pijun;       // Indeks pijuna koji se mice
+            int razlika = 0; // Gdje piuni izlaze
             bool prviPotez = false;
             bool zeleniVani = false;
             pomak = kocka();
-            if(baciKocku != 0) //varanje
+            if (baciKocku != 0) // varanje
                 pomak = baciKocku;
-            while(1)  //potez, bacanje kocke, ako nije 6 ide dalje(na pocetku)
+            while (1) // potez, bacanje kocke, ako nije 6 ide dalje(na pocetku)
             {
-                if(brojPijuna[igrac] == 0 && pomak !=6){   //brojPiuna[igraca] je kolko piuna ima
+                if (brojPijuna[igrac] == 0 && pomak != 6)
+                { // brojPiuna[igraca] je kolko piuna ima
                     system("cls");
                     ispisPloce2();
                     break;
@@ -106,67 +128,69 @@ void igra()
                 cout << "Kojeg pijuna zelite pomaknuti: " << endl;
                 cin >> pijun;
 
-                if(pijuni[igrac][pijun] < 0 && pomak != 6 || pijuni[igrac][pijun] == -100)  // polje sa pozicijama pijuna(pijuni[igrac][pijun]), iligalni potez
+                if (pijuni[igrac][pijun] < 0 && pomak != 6 || pijuni[igrac][pijun] == -100) // polje sa pozicijama pijuna(pijuni[igrac][pijun]), iligalni potez
                 {
                     cout << "Ilegalan potez " << endl;
                     continue;
                 }
 
-                if(pijuni[igrac % 4][pijun] < 0) // gleda dal je izaso iz kucice,
+                if (pijuni[igrac % 4][pijun] < 0) // gleda dal je izaso iz kucice,
                 {
                     razlika = 11 * igrac + abs(pijuni[igrac][pijun]) - pomak + 1;
                     prviPotez = true;
                     brojPijuna[igrac]++;
                 }
 
-                int i,j;
+                int i, j;
                 findElement(pijuni[igrac % 4][pijun], i, j);
-                ploca2[i][j].znak = 'O'; //na staru poziciju stavlja prazno polje (O)
-                pijuni[igrac % 4][pijun] += pomak + razlika; //racuna novu poziciju
-                if(pijuni[igrac][pijun] > 40){ //gledamo dal izlazi iz polja
-                    pijuni[igrac][pijun]-=40;
+                ploca2[i][j].znak = 'O';                     // na staru poziciju stavlja prazno polje (O)
+                pijuni[igrac % 4][pijun] += pomak + razlika; // racuna novu poziciju
+                if (pijuni[igrac][pijun] > 40)
+                { // gledamo dal izlazi iz polja
+                    pijuni[igrac][pijun] -= 40;
                     if (igrac == 0)
                         zeleniVani = true;
                 }
 
                 findElement(pijuni[igrac % 4][pijun], i, j);
-                if(ploca2[i][j].znak == znakovi[igrac]) //ako samog sebe probas pojest
+                if (ploca2[i][j].znak == znakovi[igrac]) // ako samog sebe probas pojest
                 {
                     cout << "Ilegalan potez" << endl;
                     continue;
                 }
 
-                else if(ploca2[i][j].znak != 'O'){ //cijeli els if je jedenje
-                    int kucaI, kucaJ; //kordinate kucice
+                else if (ploca2[i][j].znak != 'O')
+                {                     // cijeli els if je jedenje
+                    int kucaI, kucaJ; // kordinate kucice
                     cout << "jedenje \n";
-                    int znakZaPojest = (find(znakovi, znakovi + 4, ploca2[i][j].znak) - znakovi); //kogg si pojeo
-                    for(int k = -1; k > -5; k--) //trazi prvo slobodno mjesto u kucici
+                    int znakZaPojest = (find(znakovi, znakovi + 4, ploca2[i][j].znak) - znakovi); // kogg si pojeo
+                    for (int k = -1; k > -5; k--)                                                 // trazi prvo slobodno mjesto u kucici
                     {
                         findElement(-4 * znakZaPojest + k, kucaI, kucaJ);
-                        if(ploca2[kucaI][kucaJ].znak == 'O'){
+                        if (ploca2[kucaI][kucaJ].znak == 'O')
+                        {
                             cout << kucaI << " " << kucaJ << "\n";
                             break;
                         }
                     }
 
-                    int idx = find(pijuni[znakZaPojest], pijuni[znakZaPojest] + 4, ploca2[i][j].index) - pijuni[znakZaPojest]; //trazi u polju gdje su pijuni u kojem je polju bio pijun
-                    pijuni[znakZaPojest][idx] = ploca2[kucaI][kucaJ].index; //stavlja ga u polje gdje su ostali pijun iste boje
+                    int idx = find(pijuni[znakZaPojest], pijuni[znakZaPojest] + 4, ploca2[i][j].index) - pijuni[znakZaPojest]; // trazi u polju gdje su pijuni u kojem je polju bio pijun
+                    pijuni[znakZaPojest][idx] = ploca2[kucaI][kucaJ].index;                                                    // stavlja ga u polje gdje su ostali pijun iste boje
                     brojPijuna[znakZaPojest]--;
-                    ploca2[kucaI][kucaJ].znak = ploca2[i][j].znak; //zamjeni krug i znak
-
+                    ploca2[kucaI][kucaJ].znak = ploca2[i][j].znak; // zamjeni krug i znak
                 }
 
+                ploca2[i][j].znak = znakovi[igrac]; // gleda di treba ic pijun i stavlja ga na to mjesto
 
-                ploca2[i][j].znak = znakovi[igrac]; //gleda di treba ic pijun i stavlja ga na to mjesto
-
-                if( pijuni[igrac][pijun] >= (11 * igrac + 1) && ((pijuni[igrac][pijun] - pomak)  < (11 * igrac) || zeleniVani) && prviPotez == false){
+                if (pijuni[igrac][pijun] >= (11 * igrac + 1) && ((pijuni[igrac][pijun] - pomak) < (11 * igrac) || zeleniVani) && prviPotez == false)
+                {
                     ploca2[i][j].znak = 'O';
                     pijuni[igrac][pijun] = -100;
                     brojPijuna[igrac]--;
-
                 }
 
-                if(pomak == 6){ //ponovno bacanje
+                if (pomak == 6)
+                { // ponovno bacanje
                     igrac--;
                 }
                 system("cls");
@@ -178,10 +202,50 @@ void igra()
             }
         }
         igrac++;
-        igrac = igrac % 4; //limitira na 4 igraca
+        igrac = igrac % 4; // limitira na 4 igraca
+        saveGame();
     }
 }
 
+void loadGame()
+{
+    fstream datoteka;
+    datoteka.open("save.bin", ios::in | ios::binary);
+    datoteka.read((char *)ploca2, sizeof(ploca2));
+    datoteka.read((char *)pijuni, sizeof(pijuni));
+    datoteka.read((char *)brojPijuna, sizeof(brojPijuna));
+    datoteka.read((char *)&igrac, sizeof(igrac));
+    datoteka.close();
+
+    fstream datoteka2;
+    datoteka2.open("name.txt", ios::in);
+    for (int i = 0; i < 4; i++)
+    {
+        datoteka2 >> nazivi[i];
+    }
+    datoteka2.close();
+
+    ispisPloce2();
+    /*cout << endl;
+    for (int i = 0; i < 4; i++)
+    {
+        cout << nazivi[i] << endl;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        cout << brojPijuna[i] << endl;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            cout << pijuni[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << nazivi[igrac] << " je na potezu" << endl; */
+    igra();
+}
 
 void pause()
 {
@@ -191,8 +255,6 @@ void pause()
     cin.ignore();
     getline(cin, dummy);
 }
-
-
 
 int zasluge()
 {
@@ -207,7 +269,7 @@ void ispisPloce()
     {
         for (int j = 0; j < 8; j++)
         {
-            cout << ploca[i*8 + j];
+            cout << ploca[i * 8 + j];
             cout << " ";
         }
         cout << endl;
@@ -216,26 +278,27 @@ void ispisPloce()
 
 int main()
 {
-    srand (time(NULL));
+    srand(time(NULL));
 
-    for (int i = 0; i < 40; i++){
+    for (int i = 0; i < 40; i++)
+    {
         ploca += 'O';
-
     }
 
-    //ispisPloce();
+    // ispisPloce();
 
     int izbor;
 
+    while (1)
+    {
         system("cls");
-
-
 
         cout << "COVJECE NE LJUTI SE" << endl;
         cout << " -- pritisnete 1 za pokretanje nove igre -- " << endl;
         cout << " -- pritisnete 2 za nastavak igre -- " << endl;
         cout << " -- pritisnite 3 kako bi vidjeli zaasluge -- " << endl;
-        cout << " -- pritisnite 4 za izlaz iz programa -- " << endl;
+        cout << " -- pritisnite 4 kako bi unljeli imena igraca -- " << endl;
+        cout << " -- pritisnite 5 za izlaz iz programa -- " << endl;
         cin >> izbor;
 
         if (izbor == 1)
@@ -246,8 +309,7 @@ int main()
 
         else if (izbor == 2)
         {
-            kocka();
-            cout << " " << (find(znakovi, znakovi + 4, 'N') - znakovi);
+            loadGame();
         }
 
         else if (izbor == 3)
@@ -257,8 +319,19 @@ int main()
 
         else if (izbor == 4)
         {
-            cout << " -- izlaz iz programa -- ";
-
+            cout << "Unesite imena igraca: " << endl;
+            for (int i = 0; i < 4; i++)
+            {
+                cout << "Unesite ime igraca " << i + 1 << ": ";
+                cin >> nazivi[i];
+            }
         }
+
+        else if (izbor == 5)
+        {
+            cout << " -- izlaz iz programa -- ";
+            return 0;
+        }
+    }
     return 0;
 }
