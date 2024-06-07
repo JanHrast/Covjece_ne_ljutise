@@ -90,6 +90,8 @@ void igra()
             int pomak; //Za kolko se pijun treba pomaknut
             int pijun; //Indeks pijuna koji se mice
             int razlika = 0; //Gdje piuni izlaze
+            bool prviPotez = false;
+            bool zeleniVani = false;
             pomak = kocka();
             if(baciKocku != 0) //varanje
                 pomak = baciKocku;
@@ -104,7 +106,7 @@ void igra()
                 cout << "Kojeg pijuna zelite pomaknuti: " << endl;
                 cin >> pijun;
 
-                if(pijuni[igrac][pijun] < 0 && pomak != 6)  // polje sa pozicijama pijuna(pijuni[igrac][pijun]), iligalni potez
+                if(pijuni[igrac][pijun] < 0 && pomak != 6 || pijuni[igrac][pijun] == -100)  // polje sa pozicijama pijuna(pijuni[igrac][pijun]), iligalni potez
                 {
                     cout << "Ilegalan potez " << endl;
                     continue;
@@ -112,7 +114,8 @@ void igra()
 
                 if(pijuni[igrac % 4][pijun] < 0) // gleda dal je izaso iz kucice,
                 {
-                    razlika = 11 * igrac + abs(pijuni[igrac][pijun]);
+                    razlika = 11 * igrac + abs(pijuni[igrac][pijun]) - pomak + 1;
+                    prviPotez = true;
                     brojPijuna[igrac]++;
                 }
 
@@ -120,8 +123,11 @@ void igra()
                 findElement(pijuni[igrac % 4][pijun], i, j);
                 ploca2[i][j].znak = 'O'; //na staru poziciju stavlja prazno polje (O)
                 pijuni[igrac % 4][pijun] += pomak + razlika; //racuna novu poziciju
-                if(pijuni[igrac][pijun] > 40) //gledamo dal izlazi iz polja
+                if(pijuni[igrac][pijun] > 40){ //gledamo dal izlazi iz polja
                     pijuni[igrac][pijun]-=40;
+                    if (igrac == 0)
+                        zeleniVani = true;
+                }
 
                 findElement(pijuni[igrac % 4][pijun], i, j);
                 if(ploca2[i][j].znak == znakovi[igrac]) //ako samog sebe probas pojest
@@ -149,13 +155,25 @@ void igra()
                     ploca2[kucaI][kucaJ].znak = ploca2[i][j].znak; //zamjeni krug i znak
 
                 }
+
+
                 ploca2[i][j].znak = znakovi[igrac]; //gleda di treba ic pijun i stavlja ga na to mjesto
+
+                if( pijuni[igrac][pijun] >= (11 * igrac + 1) && ((pijuni[igrac][pijun] - pomak)  < (11 * igrac) || zeleniVani) && prviPotez == false){
+                    ploca2[i][j].znak = 'O';
+                    pijuni[igrac][pijun] = -100;
+                    brojPijuna[igrac]--;
+
+                }
+
                 if(pomak == 6){ //ponovno bacanje
                     igrac--;
                 }
                 system("cls");
                 ispisPloce2();
                 razlika = 0;
+                prviPotez = false;
+                zeleniVani = false;
                 break;
             }
         }
