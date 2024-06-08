@@ -278,7 +278,7 @@ int main()
         cout << "COVJECE NE LJUTI SE" << endl;
         cout << " -- pritisnete 1 za pokretanje nove igre -- " << endl;
         cout << " -- pritisnete 2 za nastavak igre -- " << endl;
-        cout << " -- pritisnite 3 kako bi vidjeli zaasluge -- " << endl;
+        cout << " -- pritisnite 3 kako bi vidjeli zasluge -- " << endl;
         cout << " -- pritisnite 4 kako bi unljeli imena igraca -- " << endl;
         cout << " -- pritisnite 5 za izlaz iz programa -- " << endl;
         cin >> izbor;
