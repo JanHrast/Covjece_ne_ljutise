@@ -114,7 +114,11 @@ void igra()
             bool prviPotez = false;
             bool zeleniVani = false;
             pomak = kocka();
-            if (baciKocku != 0) // varanje
+            if (baciKocku == 7) // izlaz
+            {
+                break;
+            }
+            else if (baciKocku != 0) // varanje
                 pomak = baciKocku;
             while (1) // potez, bacanje kocke, ako nije 6 ide dalje(na pocetku)
             {
@@ -229,14 +233,6 @@ void loadGame()
     igra();
 }
 
-void pause()
-{
-    cout << endl
-         << " -- Pritisnite enter za povratak -- ";
-    string dummy;
-    cin.ignore();
-    getline(cin, dummy);
-}
 
 int zasluge()
 {
@@ -270,50 +266,50 @@ int main()
     // ispisPloce();
 
     int izbor;
-
-    while (1)
-    {
-        system("cls");
-
-        cout << "COVJECE NE LJUTI SE" << endl;
-        cout << " -- pritisnete 1 za pokretanje nove igre -- " << endl;
-        cout << " -- pritisnete 2 za nastavak igre -- " << endl;
-        cout << " -- pritisnite 3 kako bi vidjeli zasluge -- " << endl;
-        cout << " -- pritisnite 4 kako bi unljeli imena igraca -- " << endl;
-        cout << " -- pritisnite 5 za izlaz iz programa -- " << endl;
-        cin >> izbor;
-
-        if (izbor == 1)
+    skok:
+        while (1)
         {
-            ispisPloce2();
-            igra();
-        }
+            system("cls");
 
-        else if (izbor == 2)
-        {
-            loadGame();
-        }
+            cout << "COVJECE NE LJUTI SE" << endl;
+            cout << " -- pritisnete 1 za pokretanje nove igre -- " << endl;
+            cout << " -- pritisnete 2 za nastavak igre -- " << endl;
+            cout << " -- pritisnite 3 kako bi vidjeli zasluge -- " << endl;
+            cout << " -- pritisnite 4 kako bi unljeli imena igraca -- " << endl;
+            cout << " -- pritisnite 5 za izlaz iz programa -- " << endl;
+            cin >> izbor;
 
-        else if (izbor == 3)
-        {
-            zasluge();
-        }
-
-        else if (izbor == 4)
-        {
-            cout << "Unesite imena igraca: " << endl;
-            for (int i = 0; i < 4; i++)
+            if (izbor == 1)
             {
-                cout << "Unesite ime igraca " << i + 1 << ": ";
-                cin >> nazivi[i];
+                ispisPloce2();
+                igra();
+            }
+
+            else if (izbor == 2)
+            {
+                loadGame();
+            }
+
+            else if (izbor == 3)
+            {
+                zasluge();
+            }
+
+            else if (izbor == 4)
+            {
+                cout << "Unesite imena igraca: " << endl;
+                for (int i = 0; i < 4; i++)
+                {
+                    cout << "Unesite ime igraca " << i + 1 << ": ";
+                    cin >> nazivi[i];
+                }
+            }
+
+            else if (izbor == 5)
+            {
+                cout << " -- izlaz iz programa -- ";
+                return 0;
             }
         }
-
-        else if (izbor == 5)
-        {
-            cout << " -- izlaz iz programa -- ";
-            return 0;
-        }
-    }
     return 0;
 }
