@@ -167,7 +167,7 @@ void igra()
                 {                     // cijeli els if je jedenje
                     int kucaI, kucaJ; // kordinate kucice
                     cout << "jedenje \n";
-                    int znakZaPojest = (find(znakovi, znakovi + 4, ploca2[i][j].znak) - znakovi); // kogg si pojeo
+                    int znakZaPojest = (find(znakovi, znakovi + 4, ploca2[i][j].znak) - znakovi); // kog si pojeo
                     for (int k = -1; k > -5; k--)                                                 // trazi prvo slobodno mjesto u kucici
                     {
                         findElement(-4 * znakZaPojest + k, kucaI, kucaJ);
@@ -188,6 +188,7 @@ void igra()
 
                 if (pijuni[igrac][pijun] >= (11 * igrac + 1) && ((pijuni[igrac][pijun] - pomak) < (11 * igrac) || zeleniVani) && prviPotez == false) // mice piuna kad prode cijelo polje
                 {
+                    
                     ploca2[i][j].znak = 'O';
                     pijuni[igrac][pijun] = -100;
                     brojPijuna[igrac]--;
