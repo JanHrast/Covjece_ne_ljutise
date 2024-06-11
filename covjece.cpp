@@ -103,6 +103,7 @@ void igra()
     // int igrac=0; //Varijabla koja odrađuje tko je na potezu
     while (1)
     {
+        cout << " klikni 7 za izlaz iz igre: "<<endl<<endl;
         cout << nazivi[igrac % 4] << " klikni 0 da bacite kocku: " << endl;
         int baciKocku;
         cin >> baciKocku;
