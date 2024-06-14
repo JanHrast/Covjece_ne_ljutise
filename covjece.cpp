@@ -1,5 +1,4 @@
 #include <iostream>
-#include <windows.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -37,7 +36,7 @@ int kocka()
     return n;
 }
 
-bool findElement(int index, int &row, int &col) //trazi broj u dva d polju od 1 do 40
+bool findElement(int index, int &row, int &col) // trazi broj u dva d polju od 1 do 40
 {
     for (int i = 0; i < 11; ++i)
     {
@@ -77,7 +76,7 @@ int brojPijuna[4] = {0, 0, 0, 0};
 string nazivi[4] = {"Zeleni", "Crveni", "Plavi", "Narancasti"};
 int igrac = 0;
 
-void saveGame() //binarna datoteka
+void saveGame() // binarna datoteka
 {
     fstream datoteka;
     datoteka.open("save.bin", ios::trunc);
@@ -86,7 +85,7 @@ void saveGame() //binarna datoteka
     datoteka.write((char *)ploca2, sizeof(ploca2)); // od 1 elementa pise kak je izgledala ploca
     datoteka.write((char *)pijuni, sizeof(pijuni));
     datoteka.write((char *)brojPijuna, sizeof(brojPijuna));
-    datoteka.write((char *)&igrac, sizeof(igrac));// sve do tud
+    datoteka.write((char *)&igrac, sizeof(igrac)); // sve do tud
     datoteka.close();
     fstream datoteka2;
     // name.txt
@@ -103,7 +102,8 @@ void igra()
     // int igrac=0; //Varijabla koja odrađuje tko je na potezu
     while (1)
     {
-        cout << " klikni 7 za izlaz iz igre: "<<endl<<endl;
+        cout << " klikni 7 za izlaz iz igre: " << endl
+             << endl;
         cout << nazivi[igrac % 4] << " klikni 0 da bacite kocku: " << endl;
         int baciKocku;
         cin >> baciKocku;
@@ -189,7 +189,7 @@ void igra()
 
                 if (pijuni[igrac][pijun] >= (11 * igrac + 1) && ((pijuni[igrac][pijun] - pomak) < (11 * igrac) || zeleniVani) && prviPotez == false) // mice piuna kad prode cijelo polje
                 {
-                    
+
                     ploca2[i][j].znak = 'O';
                     pijuni[igrac][pijun] = -100;
                     brojPijuna[igrac]--;
@@ -217,7 +217,7 @@ void loadGame()
 {
     fstream datoteka;
     datoteka.open("save.bin", ios::in | ios::binary);
-    datoteka.read((char *)ploca2, sizeof(ploca2)); //kopira iz file u memoriju, onaj prvi je obrnut save game
+    datoteka.read((char *)ploca2, sizeof(ploca2)); // kopira iz file u memoriju, onaj prvi je obrnut save game
     datoteka.read((char *)pijuni, sizeof(pijuni));
     datoteka.read((char *)brojPijuna, sizeof(brojPijuna));
     datoteka.read((char *)&igrac, sizeof(igrac));
@@ -227,14 +227,13 @@ void loadGame()
     datoteka2.open("name.txt", ios::in);
     for (int i = 0; i < 4; i++)
     {
-        datoteka2 >> nazivi[i]; //isto kao i kod save game
+        datoteka2 >> nazivi[i]; // isto kao i kod save game
     }
     datoteka2.close();
 
     ispisPloce2();
     igra();
 }
-
 
 int zasluge()
 {
@@ -268,50 +267,49 @@ int main()
     // ispisPloce();
 
     int izbor;
-    skok:
-        while (1)
+    while (1)
+    {
+        system("cls");
+
+        cout << "COVJECE NE LJUTI SE" << endl;
+        cout << " -- pritisnete 1 za pokretanje nove igre -- " << endl;
+        cout << " -- pritisnete 2 za nastavak igre -- " << endl;
+        cout << " -- pritisnite 3 kako bi vidjeli zasluge -- " << endl;
+        cout << " -- pritisnite 4 kako bi unljeli imena igraca -- " << endl;
+        cout << " -- pritisnite 5 za izlaz iz programa -- " << endl;
+        cin >> izbor;
+
+        if (izbor == 1)
         {
-            system("cls");
+            ispisPloce2();
+            igra();
+        }
 
-            cout << "COVJECE NE LJUTI SE" << endl;
-            cout << " -- pritisnete 1 za pokretanje nove igre -- " << endl;
-            cout << " -- pritisnete 2 za nastavak igre -- " << endl;
-            cout << " -- pritisnite 3 kako bi vidjeli zasluge -- " << endl;
-            cout << " -- pritisnite 4 kako bi unljeli imena igraca -- " << endl;
-            cout << " -- pritisnite 5 za izlaz iz programa -- " << endl;
-            cin >> izbor;
+        else if (izbor == 2)
+        {
+            loadGame();
+        }
 
-            if (izbor == 1)
+        else if (izbor == 3)
+        {
+            zasluge();
+        }
+
+        else if (izbor == 4)
+        {
+            cout << "Unesite imena igraca: " << endl;
+            for (int i = 0; i < 4; i++)
             {
-                ispisPloce2();
-                igra();
-            }
-
-            else if (izbor == 2)
-            {
-                loadGame();
-            }
-
-            else if (izbor == 3)
-            {
-                zasluge();
-            }
-
-            else if (izbor == 4)
-            {
-                cout << "Unesite imena igraca: " << endl;
-                for (int i = 0; i < 4; i++)
-                {
-                    cout << "Unesite ime igraca " << i + 1 << ": ";
-                    cin >> nazivi[i];
-                }
-            }
-
-            else if (izbor == 5)
-            {
-                cout << " -- izlaz iz programa -- ";
-                return 0;
+                cout << "Unesite ime igraca " << i + 1 << ": ";
+                cin >> nazivi[i];
             }
         }
+
+        else if (izbor == 5)
+        {
+            cout << " -- izlaz iz programa -- ";
+            return 0;
+        }
+    }
     return 0;
 }
